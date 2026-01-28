@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://bvp16cla6ec4w" path="res://camera/camera_controller.tscn" id="2_gtsfv"]
 
 [sub_resource type="Curve" id="Curve_gtsfv"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.6167315), -0.5266715, 0.0, 0, 0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.6167315), -1.2517323, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_hmqog"]
@@ -18,7 +18,7 @@ height = 0.95517576
 
 [node name="Player" type="CharacterBody3D" unique_id=153297718]
 script = ExtResource("1_8eijk")
-run_acceleration = 16.0
+run_acceleration = 13.0
 air_acceleration = 6.0
 run_friction = 2.7
 idle_friction = 5.0
@@ -28,7 +28,7 @@ jump_gravity_scale = 1.0
 jump_strenght = 6.4
 jump_cancel_strenght = 9.0
 dash_duration = 0.27
-dash_speed = 12.0
+dash_speed = 10.0
 dash_curve = SubResource("Curve_gtsfv")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=569681655]
@@ -55,6 +55,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1566404, 0)
 script = ExtResource("1_y0s34")
 _start_active = true
 influence = 6.0
+interpolate = true
+physics_frame = true
+interpolation_speed = 5.0
 validate_target = false
 look_at_target = false
 position_target = true
