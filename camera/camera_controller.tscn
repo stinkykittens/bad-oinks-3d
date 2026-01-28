@@ -1,9 +1,10 @@
 [gd_scene format=3 uid="uid://bvp16cla6ec4w"]
 
-[ext_resource type="Script" uid="uid://bw1wwnbcdpqn3" path="res://camera/camera_controller.gd" id="1_f7q7e"]
+[ext_resource type="Script" uid="uid://y0yws5rm841j" path="res://camera/camera_controller_orbit.gd" id="1_f7q7e"]
 
 [node name="CameraController" type="Node3D" unique_id=1435488868]
 script = ExtResource("1_f7q7e")
+camera_rotation_smoothing_speed = 1.0
 
 [node name="CameraPivot" type="Node3D" parent="." unique_id=1279415529]
 

@@ -3,8 +3,8 @@ extends Node3D
 
 
 @export var distance := 6.0
-@export var zoom_out_speed := 6.0
-
+@export var zoom_out_speed := 4.0
+@export var camera_rotation_smoothing_speed := 4.0
 
 @onready var camera_pivot: Node3D = $CameraPivot
 @onready var camera: Camera3D = $CameraPivot/Camera3D
@@ -40,7 +40,9 @@ func _physics_process(delta: float) -> void:
 	camera_pivot.position = Vector3.BACK * _camera_distance
 	if ray_cast.is_colliding():
 		camera_pivot.global_position += ray_cast.get_collision_normal() * camera.near
-	camera.look_at(look_at_position)
+	
+	camera.global_transform = camera.global_transform.interpolate_with(camera.global_transform.looking_at(look_at_position), camera_rotation_smoothing_speed * delta)
+	camera.global_rotation.z = 0
 
 
 func _calculate_position(targets: Array, _look_at: bool) -> Vector3:
