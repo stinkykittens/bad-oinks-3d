@@ -54,15 +54,18 @@ rotation_range = Vector2(-70, 45)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1566404, 0)
 script = ExtResource("1_y0s34")
 _start_active = true
-influence_position = 6.0
-influence_look_at = 0.0
+influence = 6.0
+validate_target = false
+look_at_target = false
+position_target = true
 metadata/_custom_type_script = "uid://dy051qol674nr"
 
 [node name="CameraTargetLookAt" type="Node3D" parent="Camera" unique_id=457435804]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1566404, 0)
 script = ExtResource("1_y0s34")
 _start_active = true
-influence_look_at = 6.0
+influence = 6.0
 interpolate = true
 interpolation_speed = 3.0
+validate_target = false
 metadata/_custom_type_script = "uid://dy051qol674nr"

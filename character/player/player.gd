@@ -123,7 +123,6 @@ func _physics_process(delta: float) -> void:
 			_used_dash = true
 	
 	move_and_slide()
-	print(state)
 
 
 func _smooth_rotation(delta: float) -> void:

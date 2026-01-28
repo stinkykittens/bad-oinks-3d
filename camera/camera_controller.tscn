@@ -4,11 +4,13 @@
 
 [node name="CameraController" type="Node3D" unique_id=1435488868]
 script = ExtResource("1_f7q7e")
+distance = 4.0
 camera_rotation_smoothing_speed = 1.0
 
 [node name="CameraPivot" type="Node3D" parent="." unique_id=1279415529]
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot" unique_id=1287522762]
+near = 0.03
 
 [node name="RayCast3D" type="RayCast3D" parent="." unique_id=1701870551]
 collision_mask = 2

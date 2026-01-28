@@ -2,12 +2,14 @@ class_name CameraTarget
 extends Node3D
 
 @export var _start_active: bool
-@export_range(0, 10) var influence_position := 1.0
-@export_range(0, 10) var influence_look_at := 1.0
+@export_range(0, 10) var influence := 1.0
 @export var interpolate := false
 @export_range(0, 5) var interpolation_speed := 1.0
 @export var smooth_activation := true
 @export var smooth_activation_time := 1.0
+@export var validate_target := true
+@export var look_at_target := true
+@export var position_target := false
 
 
 var _offset: Vector3
@@ -49,7 +51,5 @@ func deactivate() -> void:
 	_active = true
 
 
-func get_influence(_look_at: bool) -> float:
-	var influence = influence_look_at if _look_at else influence_position
-	
+func get_influence() -> float:
 	return influence
