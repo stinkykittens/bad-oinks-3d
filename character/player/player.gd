@@ -15,6 +15,7 @@ enum States {
 @export var gravity_scale := 1.0
 @export var jump_gravity_scale := 0.8
 @export var jump_strenght := 8.0
+@export var jump_cancel_strenght := 3.0
 
 @export var rotaion_smooth_speed_grounded := 6
 @export var rotaion_smooth_speed_air := 3
@@ -67,11 +68,16 @@ func _physics_process(delta: float) -> void:
 	
 	if state == States.Jump:
 		velocity.y -= ProjectSettings.get_setting("physics/3d/default_gravity") * jump_gravity_scale * delta
+		if not Input.is_action_pressed("jump"):
+			velocity.y = move_toward(velocity.y, 0, jump_cancel_strenght * delta)
+		if velocity.y <= 0:
+			state = States.Fall
 	
 	rotation.y = lerp_angle(rotation.y, _target_rotation, delta * (rotaion_smooth_speed_grounded if is_on_floor() else rotaion_smooth_speed_air))
 	
 	if is_on_floor() and Input.is_action_just_pressed("jump"):
 		velocity.y = jump_strenght
+		state = States.Jump
 	
 	move_and_slide()
 	print(state)
