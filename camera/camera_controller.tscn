@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://bvp16cla6ec4w"]
+
+[ext_resource type="Script" uid="uid://bw1wwnbcdpqn3" path="res://camera/camera_controller.gd" id="1_f7q7e"]
+
+[node name="CameraController" type="Node3D" unique_id=1435488868]
+script = ExtResource("1_f7q7e")
+
+[node name="CameraPivot" type="Node3D" parent="." unique_id=1279415529]
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot" unique_id=1287522762]
+
+[node name="RayCast3D" type="RayCast3D" parent="." unique_id=1701870551]
+collision_mask = 2
