@@ -3,10 +3,11 @@
 [ext_resource type="Script" uid="uid://ca8ghpf4vpfhr" path="res://character/player/player.gd" id="1_8eijk"]
 [ext_resource type="Script" uid="uid://dy051qol674nr" path="res://camera/camera_target.gd" id="1_y0s34"]
 [ext_resource type="PackedScene" uid="uid://bvp16cla6ec4w" path="res://camera/camera_controller.tscn" id="2_gtsfv"]
+[ext_resource type="Script" uid="uid://jf1v4cx4p13j" path="res://character/player/target_pivot.gd" id="4_wu8e1"]
 
 [sub_resource type="Curve" id="Curve_gtsfv"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.6167315), -1.2517323, 0.0, 0, 0]
-point_count = 2
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.38540745, 1), 0.0, 0.0, 0, 0, Vector2(0.5645799, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.56125945), -0.5879268, 0.0, 0, 0]
+point_count = 4
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_hmqog"]
 radius = 0.3
@@ -27,9 +28,11 @@ gravity_scale = 1.2
 jump_gravity_scale = 1.0
 jump_strenght = 6.4
 jump_cancel_strenght = 9.0
-dash_duration = 0.27
-dash_speed = 10.0
+dash_duration = 0.3
+dash_speed = 6.7
 dash_curve = SubResource("Curve_gtsfv")
+dash_reload_time = 0.3
+dash_rotaion_speed = 32.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=569681655]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.43853247, 0)
@@ -50,25 +53,28 @@ transform = Transform3D(0.42415205, 0.35958108, -0.83114165, -1.4901161e-08, 0.9
 rotation_speed = 60.0
 rotation_range = Vector2(-70, 45)
 
-[node name="CameraTarget" type="Node3D" parent="Camera" unique_id=1713415133]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1566404, 0)
+[node name="CameraTargetLookAt" type="Node3D" parent="Camera" unique_id=457435804]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65462065, 0)
 script = ExtResource("1_y0s34")
 _start_active = true
-influence = 6.0
+influence = 10.0
+interpolation_speed = 3.964
+validate_target = false
+metadata/_custom_type_script = "uid://dy051qol674nr"
+
+[node name="TargetPivot" type="Node3D" parent="Camera" unique_id=906915453]
+script = ExtResource("4_wu8e1")
+
+[node name="CameraTargetPosition" type="Node3D" parent="Camera/TargetPivot" unique_id=1713415133]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65462065, 0)
+script = ExtResource("1_y0s34")
+_start_active = true
+influence = 10.0
 interpolate = true
 physics_frame = true
-interpolation_speed = 5.0
+interpolation_speed = 1.667
 validate_target = false
 look_at_target = false
 position_target = true
-metadata/_custom_type_script = "uid://dy051qol674nr"
-
-[node name="CameraTargetLookAt" type="Node3D" parent="Camera" unique_id=457435804]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1566404, 0)
-script = ExtResource("1_y0s34")
-_start_active = true
-influence = 6.0
-interpolate = true
-interpolation_speed = 3.0
-validate_target = false
 metadata/_custom_type_script = "uid://dy051qol674nr"

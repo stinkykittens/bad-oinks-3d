@@ -5,13 +5,12 @@ extends Node3D
 @export_range(0, 10) var influence := 1.0
 @export var interpolate := false
 @export var physics_frame := false
-@export_range(0, 5) var interpolation_speed := 1.0
+@export_range(0, 10) var interpolation_speed := 1.0
 @export var smooth_activation := true
 @export var smooth_activation_time := 1.0
 @export var validate_target := true
 @export var look_at_target := true
 @export var position_target := false
-
 
 var _offset: Vector3
 var _active: bool

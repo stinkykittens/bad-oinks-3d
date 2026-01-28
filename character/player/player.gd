@@ -107,7 +107,7 @@ func _physics_process(delta: float) -> void:
 			_dash_time += delta
 		if _used_dash and is_on_floor():
 			_used_dash = false
-	
+
 	_smooth_rotation(delta)
 	
 	if is_on_floor() and Input.is_action_just_pressed("jump"):
