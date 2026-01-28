@@ -12,6 +12,7 @@ height = 1.3
 
 [node name="Player" type="CharacterBody3D" unique_id=153297718]
 script = ExtResource("1_8eijk")
+move_speed = 12.0
 jump_strenght = 5.5
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=569681655]
