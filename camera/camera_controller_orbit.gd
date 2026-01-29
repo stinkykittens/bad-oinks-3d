@@ -5,6 +5,11 @@ extends CameraController
 @export var rotation_range := Vector2(-45, 45)
 
 
+func _ready() -> void:
+	super()
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
 func _process(delta: float) -> void:
 	var input: Vector2
 	input.x = Input.get_axis("rotate_camera_left", "rotate_camera_right")

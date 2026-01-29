@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://dy051qol674nr" path="res://camera/camera_target.gd" id="1_y0s34"]
 [ext_resource type="PackedScene" uid="uid://bvp16cla6ec4w" path="res://camera/camera_controller.tscn" id="2_gtsfv"]
 [ext_resource type="Script" uid="uid://jf1v4cx4p13j" path="res://character/player/target_pivot.gd" id="4_wu8e1"]
+[ext_resource type="Script" uid="uid://bioyf77yyov5u" path="res://visuals/drop_shadow.gd" id="5_g20gq"]
 
 [sub_resource type="Curve" id="Curve_gtsfv"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.38540745, 1), 0.0, 0.0, 0, 0, Vector2(0.5645799, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.56125945), -0.5879268, 0.0, 0, 0]
@@ -40,10 +41,12 @@ egg_action_friction = 4.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=569681655]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.43853247, 0)
+cast_shadow = 0
 mesh = SubResource("CapsuleMesh_hmqog")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1449414350]
 transform = Transform3D(1, 0, 0, 0, -2.4252357e-08, 0.4245487, 0, -0.55482924, -1.8557612e-08, 0, 0.6289198, -0.3506441)
+cast_shadow = 0
 mesh = SubResource("CapsuleMesh_hmqog")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=781817899]
@@ -82,3 +85,10 @@ validate_target = false
 look_at_target = false
 position_target = true
 metadata/_custom_type_script = "uid://dy051qol674nr"
+
+[node name="DropShadow" type="RayCast3D" parent="." unique_id=952166251]
+script = ExtResource("5_g20gq")
+distance = 24.0
+always_visible = true
+decal_size = 0.6
+metadata/_custom_type_script = "uid://bioyf77yyov5u"
