@@ -11,7 +11,7 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	if not player.state == Player.States.Dash:
+	if not player.state == Player.State.Dash:
 		position.x = player.global_position.x + player.velocity.x * velocity_influence_xz
 		position.z = player.global_position.z + player.velocity.z * velocity_influence_xz
 	position.y = player.global_position.y + player.velocity.y * velocity_influence_y

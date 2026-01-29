@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://bvp16cla6ec4w" path="res://camera/camera_controller.tscn" id="2_gtsfv"]
 [ext_resource type="Script" uid="uid://jf1v4cx4p13j" path="res://character/player/target_pivot.gd" id="4_wu8e1"]
 [ext_resource type="Script" uid="uid://bioyf77yyov5u" path="res://visuals/drop_shadow.gd" id="5_g20gq"]
+[ext_resource type="Script" uid="uid://30tsltosd6xg" path="res://component/attack_area.gd" id="6_eu8pa"]
 
 [sub_resource type="Curve" id="Curve_gtsfv"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.38540745, 1), 0.0, 0.0, 0, 0, Vector2(0.5645799, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.56125945), -0.5879268, 0.0, 0, 0]
@@ -17,6 +18,9 @@ height = 1.0
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_y0s34"]
 radius = 0.31103516
 height = 0.95517576
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_noxpy"]
+radius = 0.40834618
 
 [node name="Player" type="CharacterBody3D" unique_id=153297718]
 collision_layer = 4
@@ -92,3 +96,12 @@ distance = 24.0
 always_visible = true
 decal_size = 0.6
 metadata/_custom_type_script = "uid://bioyf77yyov5u"
+
+[node name="DashAttackArea" type="Area3D" parent="." unique_id=57968844]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.51587635, 0.015260756)
+script = ExtResource("6_eu8pa")
+knockback = 12.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DashAttackArea" unique_id=457082001]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.3160677)
+shape = SubResource("SphereShape3D_noxpy")

@@ -3,7 +3,7 @@ extends CharacterBody3D
 
 const EGG_SCENE = preload("uid://d3woe0uy4fv75")
 
-enum States {
+enum State {
 	Idle,
 	Run,
 	Jump,
@@ -12,6 +12,8 @@ enum States {
 	LayEgg,
 	EggAction
 }
+
+signal state_changed(to: State)
 
 @export_category("Movement")
 @export var move_deadzone := 0.25
@@ -48,7 +50,16 @@ enum States {
 @export var lay_egg_rotaion_speed := 16.0
 @export var egg_action_rotaion_speed := 32.0
 
-var state: States
+@onready var dash_attack_area: AttackArea = $DashAttackArea
+
+var previous_state: State
+var state: State:
+	set(v):
+		if v == state:
+			return
+		previous_state = state
+		state = v
+		state_changed.emit(v)
 
 var _target_rotation: float
 var _dash_time: float
@@ -61,7 +72,8 @@ var _egg: CharacterBody3D
 
 
 func _ready() -> void:
-	state = States.Idle
+	state = State.Idle
+	state_changed.connect(_on_state_changed)
 
 
 func _physics_process(delta: float) -> void:
@@ -73,38 +85,38 @@ func _physics_process(delta: float) -> void:
 	var camera := get_tree().root.get_camera_3d()
 	var input_direction := Vector3(input.x, 0, input.y).rotated(Vector3.UP, camera.global_rotation.y)
 	
-	if is_on_floor() and (state == States.Fall or state == States.Jump):
+	if is_on_floor() and (state == State.Fall or state == State.Jump):
 		# Ground entered
-		state = States.Idle
+		state = State.Idle
 	
-	if not is_on_floor() and (state == States.Idle or state == States.Run):
+	if not is_on_floor() and (state == State.Idle or state == State.Run):
 		# Ground exited
-		state = States.Fall
+		state = State.Fall
 	
-	if state == States.Idle:
+	if state == State.Idle:
 		velocity.x = lerpf(velocity.x, 0, idle_friction * delta)
 		velocity.z = lerpf(velocity.z, 0, idle_friction * delta)
 		velocity.y = -1
 		if input_scale > move_deadzone:
-			state = States.Run
+			state = State.Run
 	
-	if state == States.Run:
+	if state == State.Run:
 		velocity += input_direction * run_acceleration * delta
 		velocity.x = lerpf(velocity.x, 0, run_friction * delta)
 		velocity.z = lerpf(velocity.z, 0, run_friction * delta)
 		velocity.y = -1
 		if input_scale < move_deadzone:
-			state = States.Idle
+			state = State.Idle
 		else:
 			_target_rotation = camera.global_rotation.y + input.angle_to(Vector2.UP)
 	
-	if state == States.Fall:
+	if state == State.Fall:
 		velocity += input_direction * air_acceleration * delta
 		velocity.x = lerpf(velocity.x, 0, air_friction * delta)
 		velocity.z = lerpf(velocity.z, 0, air_friction * delta)
 		velocity.y -= ProjectSettings.get_setting("physics/3d/default_gravity") * gravity_scale * delta
 	
-	if state == States.Jump:
+	if state == State.Jump:
 		velocity += input_direction * air_acceleration * delta
 		velocity.x = lerpf(velocity.x, 0, air_friction * delta)
 		velocity.z = lerpf(velocity.z, 0, air_friction * delta)
@@ -115,14 +127,14 @@ func _physics_process(delta: float) -> void:
 		if not Input.is_action_pressed("jump"):
 			velocity.y = move_toward(velocity.y, 0, jump_cancel_strenght * delta)
 		if velocity.y <= 0:
-			state = States.Fall
+			state = State.Fall
 	
-	if state == States.Dash:
+	if state == State.Dash:
 		_dash_time += delta
 		var magnitute = dash_curve.sample(_dash_time / dash_duration)
 		velocity = magnitute * Vector3.FORWARD.rotated(Vector3.UP, _target_rotation) * dash_speed
 		if _dash_time > dash_duration:
-			state = States.Fall
+			state = State.Fall
 			_dash_time = 0
 	else:
 		if _dash_time <= dash_reload_time:
@@ -130,7 +142,7 @@ func _physics_process(delta: float) -> void:
 		if _used_dash and is_on_floor():
 			_used_dash = false
 	
-	if state == States.LayEgg:
+	if state == State.LayEgg:
 		velocity.y = -1
 		velocity.x = lerpf(velocity.x, 0, lay_egg_friction * delta)
 		velocity.z = lerpf(velocity.z, 0, lay_egg_friction * delta)
@@ -145,7 +157,7 @@ func _physics_process(delta: float) -> void:
 			if is_on_floor():
 				_egg.process_mode = Node.PROCESS_MODE_DISABLED
 				_is_holding_egg = true
-				state = States.Idle
+				state = State.Idle
 			else:
 				_egg_jump()
 	else:
@@ -154,25 +166,25 @@ func _physics_process(delta: float) -> void:
 		if _layed_egg and is_on_floor():
 			_layed_egg = false
 	
-	if state == States.EggAction:
+	if state == State.EggAction:
 		_egg_action_time += delta
 		velocity.x = lerpf(velocity.x, 0, egg_action_friction * delta)
 		velocity.z = lerpf(velocity.z, 0, egg_action_friction * delta)
 		velocity.y = max(velocity.y, 0)
 		if _egg_action_time > egg_action_duration:
 			if is_on_floor():
-				state = States.Idle
+				state = State.Idle
 			else:
-				state = States.Fall
+				state = State.Fall
 	
 	_smooth_rotation(delta)
 	
 	if _can_jump() and Input.is_action_just_pressed("jump"):
 		velocity.y = jump_strenght
-		state = States.Jump
+		state = State.Jump
 	
 	if _can_dash() and Input.is_action_just_pressed("dash"):
-		state = States.Dash
+		state = State.Dash
 		_dash_time = 0
 		if input_scale > move_deadzone:
 			_target_rotation = camera.global_rotation.y + input.angle_to(Vector2.UP)
@@ -180,7 +192,7 @@ func _physics_process(delta: float) -> void:
 			_used_dash = true
 	
 	if _can_lay_egg() and Input.is_action_just_pressed("lay_egg"):
-		state = States.LayEgg
+		state = State.LayEgg
 		_egg_time = 0
 		_layed_egg = true
 	
@@ -191,7 +203,7 @@ func _physics_process(delta: float) -> void:
 			_egg.velocity = egg_throw_velocity.x * Vector3.FORWARD.rotated(Vector3.UP, _target_rotation) * dash_speed
 			_egg.velocity.y = egg_throw_velocity.y
 			_is_holding_egg = false
-			state = States.EggAction
+			state = State.EggAction
 			_egg_action_time = 0
 			if input_scale > move_deadzone:
 				_target_rotation = camera.global_rotation.y + input.angle_to(Vector2.UP)
@@ -206,39 +218,42 @@ func _physics_process(delta: float) -> void:
 func _smooth_rotation(delta: float) -> void:
 	var speed: float
 	match state:
-		States.Idle, States.Run:
+		State.Idle, State.Run:
 			speed = ground_rotaion_speed
-		States.Jump, States.Fall:
+		State.Jump, State.Fall:
 			speed = air_rotaion_speed
-		States.Dash:
+		State.Dash:
 			speed = dash_rotaion_speed
-		States.LayEgg:
+		State.LayEgg:
 			speed = lay_egg_rotaion_speed
-		States.EggAction:
+		State.EggAction:
 			speed = egg_action_rotaion_speed
 		
 	rotation.y = lerp_angle(rotation.y, _target_rotation, delta * speed)
 
 
 func _can_jump() -> bool:
-	return state != States.LayEgg and is_on_floor()
+	return state != State.LayEgg and is_on_floor()
 
 
 func _can_dash() -> bool:
-	return not _is_holding_egg and not _used_dash and _dash_time > dash_reload_time and state != States.LayEgg
+	return not _is_holding_egg and not _used_dash and _dash_time > dash_reload_time and state != State.LayEgg
 
 
 func _can_lay_egg() -> bool:
-	return not _layed_egg and state != States.EggAction and not _is_holding_egg and _egg_time > egg_reload_time and state != States.Dash
+	return not _layed_egg and state != State.EggAction and not _is_holding_egg and _egg_time > egg_reload_time and state != State.Dash
 
 
 func _egg_jump() -> void:
 	_egg.velocity.y = layed_egg_velocity
-	state = States.EggAction
+	state = State.EggAction
 	_used_dash = false
 	_egg_action_time = 0
 	if is_on_floor():
 		velocity.y = egg_jump_strenght
 	else:
 		velocity.y = egg_air_jump_strenght
-	
+
+
+func _on_state_changed(to: State) -> void:
+	dash_attack_area.active = to == State.Dash
