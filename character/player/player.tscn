@@ -35,7 +35,8 @@ dash_curve = SubResource("Curve_gtsfv")
 dash_reload_time = 0.3
 egg_jump_strenght = 7.8
 egg_throw_velocity = Vector2(2, 4)
-dash_rotaion_speed = 32.0
+lay_egg_friction = 7.0
+egg_action_friction = 4.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=569681655]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.43853247, 0)

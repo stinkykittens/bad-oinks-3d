@@ -35,6 +35,7 @@ enum States {
 @export var egg_lay_time := 0.15
 @export var egg_jump_strenght := 9.0
 @export var egg_air_jump_strenght := 4.0
+@export var egg_jump_forward_strenght := 4.0
 @export var egg_throw_velocity := Vector2(8, 3)
 @export var layed_egg_velocity := -6.0
 @export var lay_egg_friction := 5.0
@@ -158,8 +159,6 @@ func _physics_process(delta: float) -> void:
 		velocity.x = lerpf(velocity.x, 0, egg_action_friction * delta)
 		velocity.z = lerpf(velocity.z, 0, egg_action_friction * delta)
 		velocity.y = max(velocity.y, 0)
-		if input_scale > move_deadzone:
-			_target_rotation = camera.global_rotation.y + input.angle_to(Vector2.UP)
 		if _egg_action_time > egg_action_duration:
 			if is_on_floor():
 				state = States.Idle
@@ -194,6 +193,8 @@ func _physics_process(delta: float) -> void:
 			_is_holding_egg = false
 			state = States.EggAction
 			_egg_action_time = 0
+			if input_scale > move_deadzone:
+				_target_rotation = camera.global_rotation.y + input.angle_to(Vector2.UP)
 		elif Input.is_action_just_pressed("lay_egg"):
 			_egg.process_mode = Node.PROCESS_MODE_INHERIT
 			_egg_jump()
@@ -233,7 +234,11 @@ func _can_lay_egg() -> bool:
 
 func _egg_jump() -> void:
 	_egg.velocity.y = layed_egg_velocity
-	velocity.y = egg_jump_strenght
 	state = States.EggAction
 	_used_dash = false
 	_egg_action_time = 0
+	if is_on_floor():
+		velocity.y = egg_jump_strenght
+	else:
+		velocity.y = egg_air_jump_strenght
+	
