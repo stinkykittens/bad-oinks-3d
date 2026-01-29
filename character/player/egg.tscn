@@ -1,10 +1,14 @@
 [gd_scene format=3 uid="uid://d3woe0uy4fv75"]
 
 [ext_resource type="Script" uid="uid://m65tyh7f8yyd" path="res://character/player/egg.gd" id="1_aknls"]
+[ext_resource type="Script" uid="uid://30tsltosd6xg" path="res://component/attack_area.gd" id="2_7kmog"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_7kmog"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_p2vrn"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_5am2f"]
+radius = 0.2251604
 
 [node name="Egg" type="CharacterBody3D" unique_id=1228459513]
 collision_layer = 4
@@ -17,3 +21,10 @@ mesh = SubResource("SphereMesh_7kmog")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1667158721]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
 shape = SubResource("SphereShape3D_p2vrn")
+
+[node name="AttackArea" type="Area3D" parent="." unique_id=1610458107]
+script = ExtResource("2_7kmog")
+metadata/_custom_type_script = "uid://30tsltosd6xg"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AttackArea" unique_id=854037905]
+shape = SubResource("SphereShape3D_5am2f")

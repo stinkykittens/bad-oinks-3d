@@ -1,9 +1,44 @@
 [gd_scene format=3 uid="uid://dfda34lajjt1"]
 
 [ext_resource type="PackedScene" uid="uid://0w3gmrmdecqn" path="res://character/player/player.tscn" id="1_6slyc"]
+[ext_resource type="Shader" uid="uid://drr3o1gydkmmn" path="res://visuals/map.gdshader" id="1_cabd0"]
 [ext_resource type="Script" uid="uid://dy051qol674nr" path="res://camera/camera_target.gd" id="2_b71ab"]
 [ext_resource type="Script" uid="uid://fdo5qecema3n" path="res://character/enemies/enemy.gd" id="2_pwco0"]
 [ext_resource type="Script" uid="uid://c18wi4iyil52p" path="res://component/attackable.gd" id="4_42yok"]
+
+[sub_resource type="Gradient" id="Gradient_k1jtb"]
+colors = PackedColorArray(3.272891e-06, 0.46654832, 0.65006363, 1, 0.9369665, 0.79331917, 0.74933857, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_pbr4s"]
+gradient = SubResource("Gradient_k1jtb")
+fill = 2
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[sub_resource type="Gradient" id="Gradient_6b7mj"]
+colors = PackedColorArray(0, 0.43137255, 0, 1, 0.23921569, 0.3019608, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_svl6s"]
+gradient = SubResource("Gradient_6b7mj")
+fill = 2
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[sub_resource type="Gradient" id="Gradient_wd2vj"]
+colors = PackedColorArray(0.34217542, 0.35320717, 0.36506367, 1, 0.18323484, 0.14390391, 0.052174747, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_fpxlb"]
+gradient = SubResource("Gradient_wd2vj")
+fill = 2
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_u8v7t"]
+render_priority = 0
+shader = ExtResource("1_cabd0")
+shader_parameter/ground_texture = SubResource("GradientTexture2D_svl6s")
+shader_parameter/wall_texture = SubResource("GradientTexture2D_fpxlb")
+shader_parameter/ceiling_texture = SubResource("GradientTexture2D_pbr4s")
 
 [sub_resource type="SphereMesh" id="SphereMesh_b71ab"]
 
@@ -16,6 +51,7 @@ transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545
 shadow_enabled = true
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="." unique_id=71811288]
+material_override = SubResource("ShaderMaterial_u8v7t")
 use_collision = true
 collision_layer = 3
 
@@ -26,6 +62,34 @@ size = Vector3(22, 5, 23)
 [node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D" unique_id=198287329]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1.5, -3)
 size = Vector3(6, 2, 6)
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="CSGCombiner3D" unique_id=871295592]
+transform = Transform3D(1, 0, 0, 0, 0.11696026, -0.120353155, 0, 0.26151696, 0.05382649, -3.0855713, 2.5743935, -6.140042)
+size = Vector3(5.284912, 2, 6)
+
+[node name="CSGBox3D13" type="CSGBox3D" parent="CSGCombiner3D" unique_id=1424557429]
+transform = Transform3D(1, 0, 0, 0, 0.11696026, -0.120353155, 0, 0.26151696, 0.05382649, -3.0855713, 1.5743935, -0.14004183)
+size = Vector3(5.284912, 2, 6)
+
+[node name="CSGBox3D14" type="CSGBox3D" parent="CSGCombiner3D" unique_id=1330842805]
+transform = Transform3D(1, 0, 0, 0, 0.11696026, -0.120353155, 0, 0.26151696, 0.05382649, -3.0855713, 0.5743935, 5.859958)
+size = Vector3(5.284912, 2, 6)
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="CSGCombiner3D" unique_id=33452176]
+transform = Transform3D(-4.371139e-08, 0.26151696, 0.05382649, 0, 0.11696027, -0.12035317, -1, -1.1431269e-08, -2.3528306e-09, -0.11817932, 2.5743935, -8.950325)
+size = Vector3(5.284912, 2, 6)
+
+[node name="CSGBox3D10" type="CSGBox3D" parent="CSGCombiner3D" unique_id=323767776]
+transform = Transform3D(-4.371139e-08, 0.26151696, 0.05382649, 0, 0.11696027, -0.12035317, -1, -1.1431269e-08, -2.3528306e-09, 5.8818207, 0.5743935, -8.950325)
+size = Vector3(5.284912, 2, 6)
+
+[node name="CSGBox3D12" type="CSGBox3D" parent="CSGCombiner3D" unique_id=2077127807]
+transform = Transform3D(0.99999994, -3.4856882e-09, 3.586804e-09, 1.7763567e-15, 0.116960265, -0.12035316, 0, 0.26151696, 0.05382649, 2.6097393, 0.5743935, -6.142331)
+size = Vector3(6.2855225, 2, 6)
+
+[node name="CSGBox3D11" type="CSGBox3D" parent="CSGCombiner3D" unique_id=1057550392]
+transform = Transform3D(-4.371139e-08, 0.26151696, 0.05382649, 0, 0.11696027, -0.12035317, -1, -1.1431269e-08, -2.3528306e-09, -0.11817923, 0.5743935, -0.75858307)
+size = Vector3(12.785461, 2, 6)
 
 [node name="CSGBox3D4" type="CSGBox3D" parent="CSGCombiner3D" unique_id=989318270]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -9)
@@ -38,6 +102,14 @@ size = Vector3(6, 2, 6)
 [node name="CSGBox3D3" type="CSGBox3D" parent="CSGCombiner3D" unique_id=1310530861]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1, 3)
 size = Vector3(6, 1, 6)
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="CSGCombiner3D" unique_id=1748949078]
+transform = Transform3D(1, 0, 0, 0, 0.8660252, 0.49999994, 0, -0.49999994, 0.8660252, 12, -0.14217128, 3.7405975)
+size = Vector3(6, 5, 8)
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="CSGCombiner3D" unique_id=832332663]
+transform = Transform3D(1, 0, 0, 0, 0.9999999, 2.9802322e-08, 0, -2.9802322e-08, 0.9999999, 12, 0.5179494, 7.933012)
+size = Vector3(6, 7, 4)
 
 [node name="Player" parent="." unique_id=153297718 instance=ExtResource("1_6slyc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.6947079, 0.5000005, -2.2088194)

@@ -16,7 +16,7 @@ func _ready() -> void:
 		visible = true
 	
 	decal = Decal.new()
-	decal.normal_fade = 0.9
+	decal.normal_fade = 0.4
 	decal.lower_fade = 0.2
 	decal.upper_fade = 0
 	decal.texture_albedo = decal_texture
