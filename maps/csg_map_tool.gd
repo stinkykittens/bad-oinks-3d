@@ -24,12 +24,13 @@ func _ready() -> void:
 
 
 func generate() -> void:
+	
+	# Previous mesh to restore vertex data
 	var previous_mesh: ArrayMesh
 	if _generated_mesh_instance:
 		previous_mesh = _generated_mesh_instance.mesh
-		get_parent().remove_child(_generated_mesh_instance)
-		_generated_mesh_instance.queue_free()
 	
+	# Generate new static mesh
 	var mesh = bake_static_mesh()
 	mesh = deindex_mesh(mesh)
 	
@@ -38,15 +39,37 @@ func generate() -> void:
 	
 	if previous_mesh:
 		mesh = _retarget_vertex_colors(mesh, previous_mesh)
-	
 	mesh = index_mesh(mesh)
+	
+	# Add Nodes to scene
+	var holder_name = name + "Static"
+	if get_parent().has_node(holder_name):
+		get_parent().get_node(holder_name).queue_free()
+		get_parent().remove_child(get_parent().get_node(holder_name))
+	
+	var holder = Node3D.new()
+	add_sibling(holder)
+	holder.owner = owner
+	holder.name = holder_name
 	
 	_generated_mesh_instance = MeshInstance3D.new()
 	_generated_mesh_instance.mesh = mesh
-	add_sibling(_generated_mesh_instance)
-	_generated_mesh_instance.name = "GeneratedMapMeshInstance"
+	holder.add_child(_generated_mesh_instance, true)
 	_generated_mesh_instance.owner = owner
 	_generated_mesh_instance.material_override = material_override
+	
+	if use_collision:
+		var collision_shape = CollisionShape3D.new()
+		collision_shape.shape = bake_collision_shape()
+		var collision_body = StaticBody3D.new()
+		collision_body.collision_layer = collision_layer
+		collision_body.collision_mask = collision_mask
+		collision_body.collision_priority = collision_priority
+		holder.add_child(collision_body, true)
+		collision_body.owner = owner
+		collision_body.add_child(collision_shape, true)
+		collision_shape.owner = owner
+		collision_shape.hide()
 
 
 func _divide_mesh(mesh: Mesh) -> Mesh:
