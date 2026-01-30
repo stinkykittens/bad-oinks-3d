@@ -10,7 +10,9 @@ void fragment() {
 	
 	float seperation = dot(normal, vec3(0, 1, 0));
 	
-	vec3 wall = texture(wall_texture, vec2(mix(vertex.x, vertex.z, normal.x), vertex.y)).rgb;
+	vec2 wall_uv = vec2(mix(vertex.x, vertex.z, normal.x), vertex.y);
+	vec3 wall = texture(wall_texture, wall_uv).rgb;
+	wall = mix(wall, texture(ground_texture, wall_uv).rgb, 1.0 - COLOR.r);
 	vec3 ground = texture(ground_texture, vertex.xz).rgb;
 	vec3 ceiling = texture(ceiling_texture, vertex.xz).rgb;
 	
