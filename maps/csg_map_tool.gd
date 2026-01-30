@@ -3,13 +3,17 @@ class_name CSGMapTool
 extends CSGCombiner3D
 
 @export var divisions := 8
-@export var minimum_vertex_distance := 3.0
+@export var minimum_vertex_distance := 2.6
 @export var divide_walls_only := true
 @export_range(0, 1) var walls_treshold := 0.5
+@export var deep_vertex_color_copy := true
 @export var _generate: bool:
 	set(v):
-		_generate = false
+		_generate = true
+		await get_tree().process_frame
+		await get_tree().process_frame
 		generate()
+		_generate = false
 
 @export var _generated_mesh_instance: MeshInstance3D
 
@@ -27,12 +31,15 @@ func generate() -> void:
 		_generated_mesh_instance.queue_free()
 	
 	var mesh = bake_static_mesh()
+	mesh = deindex_mesh(mesh)
 	
 	for i in divisions:
 		mesh = _divide_mesh(mesh)
 	
-	#if previous_mesh:
-	_retarget_vertex_colors(mesh, previous_mesh)
+	if previous_mesh:
+		mesh = _retarget_vertex_colors(mesh, previous_mesh)
+	
+	mesh = index_mesh(mesh)
 	
 	_generated_mesh_instance = MeshInstance3D.new()
 	_generated_mesh_instance.mesh = mesh
@@ -43,14 +50,6 @@ func generate() -> void:
 
 
 func _divide_mesh(mesh: Mesh) -> Mesh:
-	
-	# Deindex mesh
-	var surface = SurfaceTool.new()
-	for sur_idx in mesh.get_surface_count():
-		surface.append_from(mesh, sur_idx, Transform3D.IDENTITY)
-	surface.deindex()
-	mesh = surface.commit()
-	
 	var vertices = PackedVector3Array()
 	var normals = PackedVector3Array()
 	var indices = PackedInt32Array()
@@ -100,17 +99,6 @@ func _divide_mesh(mesh: Mesh) -> Mesh:
 				normals.push_back(arrays[Mesh.ARRAY_NORMAL][i + 2])
 				vertices.push_back(arrays[Mesh.ARRAY_VERTEX][i + 1])
 				normals.push_back(arrays[Mesh.ARRAY_NORMAL][i + 1])
-				#vertices.push_back(arrays[Mesh.ARRAY_VERTEX][i])
-				#normals.push_back(arrays[Mesh.ARRAY_NORMAL][i])
-				#vertices.push_back(arrays[Mesh.ARRAY_VERTEX][i + 1])
-				#normals.push_back(arrays[Mesh.ARRAY_NORMAL][i + 1])
-				#vertices.push_back(arrays[Mesh.ARRAY_VERTEX][i + 2])
-				#normals.push_back(arrays[Mesh.ARRAY_NORMAL][i + 2])
-				#vertices.push_back(d)
-				#normals.push_back(arrays[Mesh.ARRAY_NORMAL][i + 2])
-				#indices.append_array([indices_count, indices_count + 3, indices_count + 2])
-				#indices.append_array([indices_count + 2, indices_count + 3, indices_count + 1])
-				#indices_count += 4
 			elif longest_distance == dist_ac:
 				var d = (arrays[Mesh.ARRAY_VERTEX][i] + arrays[Mesh.ARRAY_VERTEX][i + 2]) / 2
 				vertices.push_back(arrays[Mesh.ARRAY_VERTEX][i])
@@ -126,17 +114,6 @@ func _divide_mesh(mesh: Mesh) -> Mesh:
 				normals.push_back(arrays[Mesh.ARRAY_NORMAL][i + 1])
 				vertices.push_back(arrays[Mesh.ARRAY_VERTEX][i + 2])
 				normals.push_back(arrays[Mesh.ARRAY_NORMAL][i + 2])
-				#vertices.push_back(arrays[Mesh.ARRAY_VERTEX][i])
-				#normals.push_back(arrays[Mesh.ARRAY_NORMAL][i])
-				#vertices.push_back(arrays[Mesh.ARRAY_VERTEX][i + 1])
-				#normals.push_back(arrays[Mesh.ARRAY_NORMAL][i + 1])
-				#vertices.push_back(arrays[Mesh.ARRAY_VERTEX][i + 2])
-				#normals.push_back(arrays[Mesh.ARRAY_NORMAL][i + 2])
-				#vertices.push_back(d)
-				#normals.push_back(arrays[Mesh.ARRAY_NORMAL][i + 1])
-				#indices.append_array([indices_count, indices_count + 1, indices_count + 3])
-				#indices.append_array([indices_count + 3, indices_count + 1, indices_count + 2])
-				#indices_count += 4
 			elif longest_distance == dist_cb:
 				var d = (arrays[Mesh.ARRAY_VERTEX][i + 2] + arrays[Mesh.ARRAY_VERTEX][i + 1]) / 2
 				vertices.push_back(arrays[Mesh.ARRAY_VERTEX][i])
@@ -152,33 +129,14 @@ func _divide_mesh(mesh: Mesh) -> Mesh:
 				normals.push_back(arrays[Mesh.ARRAY_NORMAL][i + 2])
 				vertices.push_back(arrays[Mesh.ARRAY_VERTEX][i])
 				normals.push_back(arrays[Mesh.ARRAY_NORMAL][i])
-				
-				#vertices.push_back(arrays[Mesh.ARRAY_VERTEX][i])
-				#normals.push_back(arrays[Mesh.ARRAY_NORMAL][i])
-				#vertices.push_back(arrays[Mesh.ARRAY_VERTEX][i + 1])
-				#normals.push_back(arrays[Mesh.ARRAY_NORMAL][i + 1])
-				#vertices.push_back(arrays[Mesh.ARRAY_VERTEX][i + 2])
-				#normals.push_back(arrays[Mesh.ARRAY_NORMAL][i + 2])
-				#vertices.push_back(d)
-				#normals.push_back(arrays[Mesh.ARRAY_NORMAL][i])
-				#indices.append_array([indices_count, indices_count + 1, indices_count + 2])
-				#indices.append_array([indices_count + 3, indices_count + 2, indices_count])
-				#indices_count += 4
 	
 	var new_mesh = ArrayMesh.new()
 	var surface_arrays = []
 	surface_arrays.resize(Mesh.ARRAY_MAX)
 	surface_arrays[Mesh.ARRAY_VERTEX] = vertices
 	surface_arrays[Mesh.ARRAY_NORMAL] = normals
-	#surface_arrays[Mesh.ARRAY_INDEX] = indices
 	new_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, surface_arrays)
-	
-	# Index mesh
-	surface = SurfaceTool.new()
-	for sur_idx in new_mesh.get_surface_count():
-		surface.append_from(new_mesh, sur_idx, Transform3D.IDENTITY)
-	surface.index()
-	return surface.commit()
+	return new_mesh
 
 
 func _retarget_vertex_colors(mesh: ArrayMesh, old_mesh: ArrayMesh) -> Mesh:
@@ -188,14 +146,25 @@ func _retarget_vertex_colors(mesh: ArrayMesh, old_mesh: ArrayMesh) -> Mesh:
 	
 	for sur_idx in mesh.get_surface_count():
 		var arrays = mesh.surface_get_arrays(sur_idx)
-		#var old_arrays = old_mesh.surface_get_arrays(sur_idx)
+		var old_arrays = index_mesh(old_mesh).surface_get_arrays(sur_idx)
+		
 		for i in arrays[Mesh.ARRAY_VERTEX].size():
+			
 			var color := Color.WHITE
-			#for vi in old_mesh.surface_get_array_len(sur_idx):
-				#if arrays[Mesh.ARRAY_VERTEX][i].is_equal_approx(old_arrays[Mesh.ARRAY_VERTEX][vi]):
-					#color = old_arrays[Mesh.ARRAY_COLOR][vi]
-					#print("AHHH ", old_arrays[Mesh.ARRAY_COLOR][vi])
-					#break
+			var vertex_index = old_arrays[Mesh.ARRAY_VERTEX].find(arrays[Mesh.ARRAY_VERTEX][i])
+			
+			if vertex_index != -1:
+				color = old_arrays[Mesh.ARRAY_COLOR][vertex_index]
+			elif deep_vertex_color_copy:
+				var distances = PackedFloat32Array()
+				for vi in old_mesh.surface_get_array_len(sur_idx):
+					distances.push_back(arrays[Mesh.ARRAY_VERTEX][i].distance_squared_to(old_arrays[Mesh.ARRAY_VERTEX][vi]))
+				var unsorted_distances = distances.duplicate()
+				distances.sort()
+				vertex_index = unsorted_distances.find(distances[0])
+				if vertex_index != -1:
+					color = old_arrays[Mesh.ARRAY_COLOR][vertex_index]
+			
 			vertices.push_back(arrays[Mesh.ARRAY_VERTEX][i])
 			normals.push_back(arrays[Mesh.ARRAY_NORMAL][i])
 			colors.push_back(color)
@@ -206,9 +175,21 @@ func _retarget_vertex_colors(mesh: ArrayMesh, old_mesh: ArrayMesh) -> Mesh:
 	surface_arrays[Mesh.ARRAY_VERTEX] = vertices
 	surface_arrays[Mesh.ARRAY_NORMAL] = normals
 	surface_arrays[Mesh.ARRAY_COLOR] = colors
-	var c = PackedColorArray()
-	c.resize(vertices.size())
-	c.fill(Color.BLACK)
-	surface_arrays[Mesh.ARRAY_COLOR] = c
 	new_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, surface_arrays)
 	return new_mesh
+
+
+func index_mesh(mesh: Mesh) -> Mesh:
+	var surface = SurfaceTool.new()
+	for sur_idx in mesh.get_surface_count():
+		surface.append_from(mesh, sur_idx, Transform3D.IDENTITY)
+	surface.index()
+	return surface.commit()
+
+
+func deindex_mesh(mesh: Mesh) -> Mesh:
+	var surface = SurfaceTool.new()
+	for sur_idx in mesh.get_surface_count():
+		surface.append_from(mesh, sur_idx, Transform3D.IDENTITY)
+	surface.deindex()
+	return surface.commit()

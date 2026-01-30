@@ -1,7 +1,5 @@
 shader_type spatial;
 
-//render_mode cull_disabled;
-
 uniform sampler2D ground_texture : repeat_enable;
 uniform sampler2D wall_texture : repeat_enable;
 uniform sampler2D ceiling_texture : repeat_enable;

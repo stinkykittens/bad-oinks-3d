@@ -16,7 +16,7 @@ config/icon="res://icon.svg"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/editor_camera_focus/plugin.cfg")
+enabled=PackedStringArray("res://addons/editor_camera_focus/plugin.cfg", "res://addons/nexus_vertex_painter/plugin.cfg")
 
 [input]
 
