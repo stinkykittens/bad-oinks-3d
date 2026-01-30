@@ -70,7 +70,8 @@ func generate() -> void:
 		collision_body.add_child(collision_shape, true)
 		collision_shape.owner = owner
 		collision_shape.hide()
-
+	
+	hide()
 
 func _divide_mesh(mesh: Mesh) -> Mesh:
 	var vertices = PackedVector3Array()

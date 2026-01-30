@@ -255,16 +255,16 @@ transform = Transform3D(1, 0, 0, 0, 0.9439394, -0.33011907, 0, 0.33011907, 0.943
 operation = 2
 size = Vector3(3, 3.1427002, 15.14801)
 
-[node name="CSGCombiner3DStatic" type="Node3D" parent="." unique_id=1744662072]
+[node name="CSGCombiner3DStatic" type="Node3D" parent="." unique_id=1116793809]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CSGCombiner3DStatic" unique_id=869334398]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CSGCombiner3DStatic" unique_id=1225609346]
 material_override = SubResource("ShaderMaterial_u8v7t")
 mesh = SubResource("ArrayMesh_k1jtb")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="CSGCombiner3DStatic" unique_id=1606543515]
+[node name="StaticBody3D" type="StaticBody3D" parent="CSGCombiner3DStatic" unique_id=270449588]
 collision_layer = 3
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CSGCombiner3DStatic/StaticBody3D" unique_id=1393659354]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CSGCombiner3DStatic/StaticBody3D" unique_id=1707458530]
 visible = false
 shape = SubResource("ConcavePolygonShape3D_pbr4s")
 
