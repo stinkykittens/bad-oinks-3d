@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://cdnrdp18m6ply" path="res://maps/csg_map_tool.gd" id="2_pbr4s"]
 [ext_resource type="Script" uid="uid://fdo5qecema3n" path="res://character/enemies/enemy.gd" id="2_pwco0"]
 [ext_resource type="Script" uid="uid://c18wi4iyil52p" path="res://component/attackable.gd" id="4_42yok"]
+[ext_resource type="AudioStream" uid="uid://ddjew6kdsnmv5" path="res://sfx/a_pigs_delirium.mp3" id="7_pbr4s"]
 
 [sub_resource type="Gradient" id="Gradient_k1jtb"]
 colors = PackedColorArray(3.272891e-06, 0.46654832, 0.65006363, 1, 0.9369665, 0.79331917, 0.74933857, 1)
@@ -255,26 +256,24 @@ transform = Transform3D(1, 0, 0, 0, 0.9439394, -0.33011907, 0, 0.33011907, 0.943
 operation = 2
 size = Vector3(3, 3.1427002, 15.14801)
 
-[node name="CSGCombiner3DStatic" type="Node3D" parent="." unique_id=1116793809]
+[node name="CSGCombiner3DStatic" type="Node3D" parent="." unique_id=1470742208]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CSGCombiner3DStatic" unique_id=1225609346]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CSGCombiner3DStatic" unique_id=709318555]
 material_override = SubResource("ShaderMaterial_u8v7t")
 mesh = SubResource("ArrayMesh_k1jtb")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="CSGCombiner3DStatic" unique_id=270449588]
+[node name="StaticBody3D" type="StaticBody3D" parent="CSGCombiner3DStatic" unique_id=1407948090]
 collision_layer = 3
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CSGCombiner3DStatic/StaticBody3D" unique_id=1707458530]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CSGCombiner3DStatic/StaticBody3D" unique_id=1937459266]
 visible = false
 shape = SubResource("ConcavePolygonShape3D_pbr4s")
 
 [node name="Player" parent="." unique_id=153297718 instance=ExtResource("1_6slyc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.6947079, 0.5000005, -2.2088194)
-visible = false
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=1168560279]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 6, -9)
-visible = false
 script = ExtResource("2_pwco0")
 health = 3
 
@@ -292,3 +291,9 @@ shape = SubResource("SphereShape3D_42yok")
 [node name="Attackable" type="Node3D" parent="CharacterBody3D" unique_id=2067908926]
 script = ExtResource("4_42yok")
 metadata/_custom_type_script = "uid://c18wi4iyil52p"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=401466730]
+stream = ExtResource("7_pbr4s")
+autoplay = true
+bus = &"MUSIC"
+parameters/looping = true

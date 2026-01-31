@@ -25,7 +25,7 @@ func _ready() -> void:
 	add_child(decal)
 	
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	
 	if not always_visible:
 		var cam := get_viewport().get_camera_3d()

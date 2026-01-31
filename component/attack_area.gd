@@ -6,7 +6,7 @@ extends Area3D
 @export var knockback := 6.0
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if not active:
 		return
 	
