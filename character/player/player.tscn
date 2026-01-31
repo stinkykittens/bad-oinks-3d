@@ -69,22 +69,31 @@ rotation_range = Vector2(-70, 45)
 [node name="CameraTargetLookAt" type="Node3D" parent="Camera" unique_id=457435804]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65462065, 0)
 script = ExtResource("1_y0s34")
+_start_active = true
 influence = 10.0
 interpolation_speed = 3.964
 validate_target = false
 metadata/_custom_type_script = "uid://dy051qol674nr"
 
-[node name="TargetPivot" type="Node3D" parent="Camera" unique_id=906915453]
-script = ExtResource("4_wu8e1")
-speed_ground = 1.7
-speed_air = 0.76
-
-[node name="CameraTargetPosition" type="Node3D" parent="Camera/TargetPivot" unique_id=1713415133]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65462065, 0)
+[node name="CameraTargetInstant" type="Node3D" parent="Camera" unique_id=602260623]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 script = ExtResource("1_y0s34")
 _start_active = true
-influence = 10.0
+physics_frame = true
+validate_target = false
+look_at_target = false
+position_target = true
+metadata/_custom_type_script = "uid://dy051qol674nr"
+
+[node name="TargetPivot" type="Node3D" parent="Camera" unique_id=906915453]
+script = ExtResource("4_wu8e1")
+speed_air = 0.5
+instant_position_blend_amount = 0.0
+
+[node name="CameraTargetPosition" type="Node3D" parent="Camera/TargetPivot" unique_id=1713415133]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+script = ExtResource("1_y0s34")
+_start_active = true
 interpolate = true
 physics_frame = true
 interpolation_speed = 1.666

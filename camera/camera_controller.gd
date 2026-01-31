@@ -6,6 +6,7 @@ extends Node3D
 @export var zoom_out_speed := 4.0
 @export var camera_rotation_smoothing_speed := 4.0
 @export var look_at_close_to_camera_jank_fix := 3.0
+@export var look_at_cancelling := 1.0
 
 @onready var camera_pivot: Node3D = $CameraPivot
 @onready var camera: Camera3D = $CameraPivot/Camera3D
@@ -23,8 +24,10 @@ func _physics_process(delta: float) -> void:
 	var targets := get_tree().get_nodes_in_group("camera_targets")
 	var target_position := _calculate_position(targets, false)
 	var look_at_position := _calculate_position(targets, true)
-	look_at_position = look_at_position.lerp(target_position, 1 - smoothstep(0, look_at_close_to_camera_jank_fix, look_at_position.distance_to(camera.global_position)))
-	
+	var look_at_cancel_amount = 1 - smoothstep(0, look_at_close_to_camera_jank_fix, look_at_position.distance_to(camera_pivot.global_position))
+	look_at_cancel_amount += look_at_cancelling * abs(camera_pivot.global_basis.y.dot(camera_pivot.global_position.direction_to(look_at_position)))
+	look_at_cancel_amount = clamp(0.0, 1.0, look_at_cancel_amount)
+	look_at_position = look_at_position.lerp(target_position, look_at_cancel_amount)
 	position = target_position
 	
 	var target_distance:= distance
