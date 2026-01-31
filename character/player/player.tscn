@@ -19,6 +19,15 @@ height = 1.0
 radius = 0.31103516
 height = 0.95517576
 
+[sub_resource type="Curve" id="Curve_eu8pa"]
+_data = [Vector2(0, 0), 0.0, 0.10960812, 0, 0, Vector2(0.35202, 0.67794627), 2.635151, 2.635151, 0, 0, Vector2(0.5813858, 1), 0.13765918, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_noxpy"]
+_limits = [0.0, 1.0, 0.0, 0.2]
+_data = [Vector2(0.072489135, 0), 0.0, 1.4754215, 0, 0, Vector2(0.10626845, 0.49605387), 40.336216, 40.336216, 0, 0, Vector2(0.1475543, 1), -0.042909864, 0.0, 0, 0]
+point_count = 3
+
 [sub_resource type="SphereShape3D" id="SphereShape3D_noxpy"]
 radius = 0.40834618
 
@@ -27,8 +36,8 @@ collision_layer = 4
 script = ExtResource("1_8eijk")
 run_acceleration = 13.0
 air_acceleration = 6.0
-run_friction = 2.7
-idle_friction = 5.0
+run_friction = 3.0
+idle_friction = 7.0
 air_friction = 1.0
 gravity_scale = 1.2
 jump_gravity_scale = 1.0
@@ -75,20 +84,15 @@ interpolation_speed = 3.964
 validate_target = false
 metadata/_custom_type_script = "uid://dy051qol674nr"
 
-[node name="CameraTargetInstant" type="Node3D" parent="Camera" unique_id=602260623]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-script = ExtResource("1_y0s34")
-_start_active = true
-physics_frame = true
-validate_target = false
-look_at_target = false
-position_target = true
-metadata/_custom_type_script = "uid://dy051qol674nr"
-
 [node name="TargetPivot" type="Node3D" parent="Camera" unique_id=906915453]
 script = ExtResource("4_wu8e1")
-speed_air = 0.5
-instant_position_blend_amount = 0.0
+velocity_influence_xz = 0.2
+speed_ground = 1.8
+speed_air = 0.76
+speed_tween_duration = 0.15
+instant_position_blend_speed = 0.8
+instant_position_blend_curve = SubResource("Curve_eu8pa")
+instant_position_amount_curve = SubResource("Curve_noxpy")
 
 [node name="CameraTargetPosition" type="Node3D" parent="Camera/TargetPivot" unique_id=1713415133]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
@@ -97,6 +101,18 @@ _start_active = true
 interpolate = true
 physics_frame = true
 interpolation_speed = 1.666
+validate_target = false
+look_at_target = false
+position_target = true
+metadata/_custom_type_script = "uid://dy051qol674nr"
+
+[node name="CameraTargetInstant" type="Node3D" parent="Camera/TargetPivot" unique_id=602260623]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+script = ExtResource("1_y0s34")
+_start_active = true
+interpolate = true
+physics_frame = true
+interpolation_speed = 12.0
 validate_target = false
 look_at_target = false
 position_target = true

@@ -5,7 +5,7 @@ extends Node3D
 @export_range(0, 10) var influence := 1.0
 @export var interpolate := false
 @export var physics_frame := false
-@export_range(0, 10) var interpolation_speed := 1.0
+@export var interpolation_speed := 1.0
 @export var smooth_activation := true
 @export var smooth_activation_time := 1.0
 @export var validate_target := true
